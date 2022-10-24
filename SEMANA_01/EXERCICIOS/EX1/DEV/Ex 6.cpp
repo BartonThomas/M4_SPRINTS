@@ -16,7 +16,7 @@
 #include<string>
 using namespace std;
 
-string getMovement(int Numbers[]){
+int getMovement(int Numbers[]){
   int dist[4] = {};
   string loc[4] = {"Direita", "Esquerda", "Frente", "Tras"};
   string dir[4] = {};
@@ -49,8 +49,13 @@ string getMovement(int Numbers[]){
 }
 
 int main(){
-  int array [4];
-  cout << "Insira os quatro valores de movimento: ";
-  scanf("%d %d %d %d", &array[0], &array[1], &array[2], &array[3]);
-  cout << "\n\n\n\n" << getMovement(array);
+  int x = 1;
+  while(x==1){
+    int array [4];
+    cout << "Insira os quatro valores de movimento: ";
+    scanf("%d %d %d %d", &array[0], &array[1], &array[2], &array[3]);
+    cout << "\n\n" << getMovement(array);
+    cout << "\nDeseja continuar? (1 - sim// 2 - nao)";
+    scanf("%d", &x);
+  }
 }

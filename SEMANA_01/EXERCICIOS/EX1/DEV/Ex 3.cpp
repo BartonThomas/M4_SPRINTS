@@ -13,7 +13,6 @@ using namespace std;
 
 int insereVetor(int elemento, int valorMax,const int lastPos, int Vetor[]){
     cout << Vetor[0] << endl;
-    cout << lastPos << endl;
     if(lastPos>=valorMax-1){
         cout << "mensagem de erro 'Erro: valorMax: 10, lastPos + 1 (indice): 10'" << endl;
         return 0;
