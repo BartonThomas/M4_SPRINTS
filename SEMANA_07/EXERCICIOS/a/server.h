@@ -2,12 +2,14 @@
 #include <ESPAsyncWebServer.h>
 #include <SPIFFS.h>
 
+//Inicialização do servidor
 AsyncWebServer server(80);
 
+//Variáveis para guardar os inputs do html
 const char* redPlay = "redGuess";
 const char* greenPlay = "greenGuess";
 
-// HTML para rodar no servidor WEB
+//HTML para rodar no servidor WEB
 const char index_html[] PROGMEM = R"rawliteral(
 <!DOCTYPE HTML><html><head>
   <title>Clicks</title>
@@ -31,6 +33,7 @@ const char index_html[] PROGMEM = R"rawliteral(
   <iframe style="display:none" name="hidden-form"></iframe>
 </body></html>)rawliteral";
 
+//Função de leitura dos dados inputados
 String readFile(fs::FS &fs, const char * path){
   File file = fs.open(path, "r");
   if(!file || file.isDirectory()){
@@ -44,7 +47,7 @@ String readFile(fs::FS &fs, const char * path){
   return fileContent;
 }
 
-
+//Função para reescrever os dados salvos
 void writeFile(fs::FS &fs, const char * path, const char * message){
   File file = fs.open(path, "w");
   if(!file){
@@ -58,7 +61,7 @@ void writeFile(fs::FS &fs, const char * path, const char * message){
   file.close();
 }
 
-
+//Função para mostrar os úlimos valores salvos
 String processor(const String& var){
   if(var == "redGuess"){
     return readFile(SPIFFS, "/redGuess.txt");
@@ -70,7 +73,7 @@ String processor(const String& var){
   return String();
 }
 
-
+//Verificação por erros,,, setup do servidor
 void serverSetup() {
   #ifdef ESP32
     if(!SPIFFS.begin(true)){
@@ -82,12 +85,12 @@ void serverSetup() {
     }
   #endif
 
-  // Send web page with input fields to client
+  //Envio do html ao cliente
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send_P(200, "text/html", index_html, processor);
   });
 
-  // Send a GET request to <ESP_IP>/get?inputString=<inputMessage>
+  //API "GET" para pegar os valores salvos
   server.on("/get", HTTP_GET, [] (AsyncWebServerRequest *request) {
     String inputMessage;
 
@@ -110,6 +113,7 @@ void serverSetup() {
   server.begin();
 }
 
+//Função utilizada para resetar os valores salvos e iniciar do zero
 void resetFiles(String inputMessage){
   writeFile(SPIFFS, "/redGuess.txt", inputMessage.c_str());
   writeFile(SPIFFS, "/greenGuess.txt", inputMessage.c_str());
